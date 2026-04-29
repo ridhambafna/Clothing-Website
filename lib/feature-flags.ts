@@ -1,0 +1,190 @@
+export const DEFAULT_FLAGS = {
+  // Homepage
+  announcementBar: true,
+  heroBanner: true,
+  featuredCollections: true,
+  featuredProducts: true,
+  trustBadges: true,
+  newArrivals: true,
+  testimonials: true,
+  lookbook: false,
+  // Popups & Auth
+  autoAuthPopup: true,
+  signInGateOnAnnouncement: true,
+  // Product Page
+  sizePopupBeforeBag: true,
+  sizePopupBeforeWishlist: true,
+  buyNowButton: true,
+  shareButton: true,
+  pincodeCheck: true,
+  zoomOnHover: true,
+  arrowNavigation: true,
+  moreLikeThis: true,
+  accordionDescription: true,
+  accordionSpecification: true,
+  accordionSupplier: true,
+  accordionReturns: true,
+  // Offers & Promotions
+  promoCodeAtCheckout: true,
+  saleBadge: true,
+  offerAnnouncementBar: true,
+  // Store Features
+  wishlist: true,
+  reviews: true,
+  whatsappButton: true,
+  filterAndSort: true,
+  outOfStockBadge: true,
+  socialShare: true,
+  // Payments
+  cashOnDelivery: true,
+  // Search
+  searchSuggestions: true,
+  // Footer sections
+  footerCustomerCare: true,
+  footerOurCompany: true,
+  footerLegal: true,
+  footerSocial: true,
+  // Customer Care links
+  fl_contact: true,
+  fl_faq: true,
+  fl_shipping: true,
+  fl_sizeGuide: true,
+  fl_orderStatus: true,
+  // Our Company links
+  fl_about: true,
+
+  fl_sustainability: true,
+  fl_careers: true,
+  fl_press: true,
+  // Legal links
+  fl_privacy: true,
+  fl_terms: true,
+  fl_cookies: true,
+  fl_accessibility: true,
+} as const;
+
+export type FeatureFlags = typeof DEFAULT_FLAGS;
+export type FlagKey = keyof FeatureFlags;
+
+export const FLAG_GROUPS: Record<string, { label: string; flags: FlagKey[] }> = {
+  homepage: {
+    label: "Homepage",
+    flags: [
+      "announcementBar",
+      "heroBanner",
+      "featuredCollections",
+      "featuredProducts",
+      "trustBadges",
+      "newArrivals",
+      "testimonials",
+      "lookbook",
+    ],
+  },
+  popups: {
+    label: "Popups & Auth",
+    flags: ["autoAuthPopup", "signInGateOnAnnouncement"],
+  },
+  product: {
+    label: "Product Page",
+    flags: [
+      "sizePopupBeforeBag",
+      "sizePopupBeforeWishlist",
+      "buyNowButton",
+      "shareButton",
+      "pincodeCheck",
+      "zoomOnHover",
+      "arrowNavigation",
+      "moreLikeThis",
+      "accordionDescription",
+      "accordionSpecification",
+      "accordionSupplier",
+      "accordionReturns",
+    ],
+  },
+  offers: {
+    label: "Offers & Promotions",
+    flags: ["promoCodeAtCheckout", "saleBadge", "offerAnnouncementBar"],
+  },
+  store: {
+    label: "Store Features",
+    flags: ["wishlist", "reviews", "whatsappButton", "filterAndSort", "outOfStockBadge", "socialShare"],
+  },
+  payments: {
+    label: "Payments",
+    flags: ["cashOnDelivery"],
+  },
+  search: {
+    label: "Search",
+    flags: ["searchSuggestions"],
+  },
+  footerSections: {
+    label: "Footer — Sections",
+    flags: ["footerCustomerCare", "footerOurCompany", "footerLegal", "footerSocial"],
+  },
+  footerCustomerCareLinks: {
+    label: "Footer — Customer Care Links",
+    flags: ["fl_contact", "fl_faq", "fl_shipping", "fl_sizeGuide", "fl_orderStatus"],
+  },
+  footerOurCompanyLinks: {
+    label: "Footer — Our Company Links",
+    flags: ["fl_about", "fl_sustainability", "fl_careers", "fl_press"],
+  },
+  footerLegalLinks: {
+    label: "Footer — Legal Links",
+    flags: ["fl_privacy", "fl_terms", "fl_cookies", "fl_accessibility"],
+  },
+};
+
+export const FLAG_LABELS: Record<FlagKey, string> = {
+  announcementBar: "Announcement Bar",
+  heroBanner: "Hero Banner",
+  featuredCollections: "Featured Collections",
+  featuredProducts: "Featured Products",
+  trustBadges: "Trust Badges",
+  newArrivals: "New Arrivals",
+  testimonials: "Testimonials",
+  lookbook: "Instagram / Lookbook",
+  autoAuthPopup: "Auto Login/Signup Popup (10s)",
+  signInGateOnAnnouncement: "Sign-in Gate on Announcement Click",
+  sizePopupBeforeBag: "Size Popup Before Add to Bag",
+  sizePopupBeforeWishlist: "Size Popup Before Wishlist",
+  buyNowButton: "Buy Now Button",
+  shareButton: "Share Button",
+  pincodeCheck: "Pincode Delivery Check",
+  zoomOnHover: "Zoom on Hover",
+  arrowNavigation: "Arrow Navigation",
+  moreLikeThis: "More Like This Section",
+  accordionDescription: "Description Accordion",
+  accordionSpecification: "Specification Accordion",
+  accordionSupplier: "Supplier Information Accordion",
+  accordionReturns: "Returns Accordion",
+  promoCodeAtCheckout: "Promo Code at Checkout",
+  saleBadge: "Sale Badge on Products",
+  offerAnnouncementBar: "Offer Announcement Bar",
+  wishlist: "Wishlist Sitewide",
+  reviews: "Customer Reviews",
+  whatsappButton: "WhatsApp Enquiry Button",
+  filterAndSort: "Filter and Sort on Listing",
+  outOfStockBadge: "Out of Stock Badge",
+  socialShare: "Social Share on Product",
+  cashOnDelivery: "Cash on Delivery at Checkout",
+  searchSuggestions: "Search Bar Product Suggestions",
+  footerCustomerCare: "Footer Section: Customer Care",
+  footerOurCompany: "Footer Section: Our Company",
+  footerLegal: "Footer Section: Legal",
+  footerSocial: "Footer Section: Social Icons",
+  fl_contact: "Customer Care: Contact Us",
+  fl_faq: "Customer Care: FAQ",
+  fl_shipping: "Customer Care: Shipping & Returns",
+  fl_sizeGuide: "Customer Care: Size Guide",
+  fl_orderStatus: "Customer Care: Order Status",
+  fl_about: "Our Company: About Us",
+
+  fl_sustainability: "Our Company: Sustainability",
+  fl_careers: "Our Company: Careers",
+  fl_press: "Our Company: Press",
+  fl_privacy: "Legal: Privacy Policy",
+  fl_terms: "Legal: Terms of Service",
+  fl_cookies: "Legal: Cookie Policy",
+  fl_accessibility: "Legal: Accessibility",
+};

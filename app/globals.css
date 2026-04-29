@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0F0F0F;
+  --color-secondary: #222222;
+  --color-accent: #C5A572;
+  --color-gold: #C5A572;
+  --color-gold-deep: #B8965A;
+  --color-surface: #F8F6F2;
+  --color-background: #FFFFFF;
+  --color-foreground: #222222;
+  --color-muted: #777777;
+  --color-border: #E8E2D5;
+  --font-heading: var(--font-playfair), 'Playfair Display', serif;
+  --font-body: var(--font-inter), 'Inter', sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-bg, #FFFFFF);
+    color: var(--color-text, #222222);
+    font-family: var(--font-body, 'Inter', sans-serif);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    color: var(--color-text, #222222);
+  }
+
+  /* Gold heading variant — apply with `font-heading text-gold` or class `.h-gold` */
+  .h-gold { color: #C5A572; }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  a { color: inherit; }
+}
+
+@layer components {
+  /* Primary button — solid gold */
+  .btn-primary {
+    background-color: #C5A572;
+    color: #FFFFFF;
+    padding: 0.875rem 2.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.8rem;
+    transition: background-color 250ms ease;
+    display: inline-block;
+    text-align: center;
+    border: 1px solid #C5A572;
+  }
+  .btn-primary:hover { background-color: #B8965A; border-color: #B8965A; }
+
+  /* Secondary button — outlined gold */
+  .btn-secondary {
+    background-color: transparent;
+    color: #C5A572;
+    padding: 0.875rem 2.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.8rem;
+    transition: all 250ms ease;
+    display: inline-block;
+    text-align: center;
+    border: 1px solid #C5A572;
+  }
+  .btn-secondary:hover { background-color: #C5A572; color: #FFFFFF; }
+
+  /* Dark button (for cart/checkout etc.) */
+  .btn-dark {
+    background-color: #0F0F0F;
+    color: #FFFFFF;
+    padding: 0.875rem 2.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.8rem;
+    border: 1px solid #0F0F0F;
+    transition: background-color 250ms ease;
+    display: inline-block;
+    text-align: center;
+  }
+  .btn-dark:hover { background-color: #222222; }
+}
