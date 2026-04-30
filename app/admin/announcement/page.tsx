@@ -58,7 +58,7 @@ export default function AnnouncementAdmin() {
             <input className={ic} value={data.text} onChange={(e) => setData({ ...data, text: e.target.value })} placeholder="Premium Festive Edit — 15% off your first order" />
           </div>
           <div><label className={lc}>Link (optional)</label>
-            <input className={ic} value={data.link} onChange={(e) => setData({ ...data, link: e.target.value })} placeholder="/collections/kurta" />
+            <input className={ic} value={data.link} onChange={(e) => setData({ ...data, link: e.target.value })} placeholder="/collections/ethnic" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>

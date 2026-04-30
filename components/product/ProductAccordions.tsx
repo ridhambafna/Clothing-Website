@@ -17,18 +17,6 @@ export default function ProductAccordions({ product }: { product: Product }) {
       render: () => <p className="text-sm font-light leading-loose text-neutral-600">{product.description}</p>,
     },
     {
-      key: "spec", title: "Specification", flag: "accordionSpecification",
-      render: () => (
-        <dl className="grid grid-cols-2 gap-y-3 text-sm">
-          <dt className="text-neutral-500">Metal</dt><dd>{product.metal}</dd>
-          <dt className="text-neutral-500">Stone</dt><dd>{product.stone}</dd>
-          <dt className="text-neutral-500">Weight</dt><dd>{product.weight}</dd>
-          <dt className="text-neutral-500">Purity</dt><dd>{product.purity}</dd>
-          <dt className="text-neutral-500">SKU</dt><dd className="font-mono text-xs">{product.sku}</dd>
-        </dl>
-      ),
-    },
-    {
       key: "supplier", title: "Supplier Information", flag: "accordionSupplier",
       render: () => <p className="text-sm font-light leading-loose text-neutral-600">{product.supplier || "Hand-crafted in our atelier."}</p>,
     },

@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/contexts/AppContext";
-import { brandConfig } from "@/brand.config";
 
 interface BarOffer { description: string; link: string; bg: string; color: string; }
 
@@ -22,15 +21,15 @@ export default function AnnouncementBar() {
       if (Array.isArray(offers) && offers.length > 0) {
         const o = offers[0];
         setOffer({
-          description: o.description || o.title || brandConfig.content.announcement.text,
-          link: o.linkValue || banner.announcementLink || brandConfig.content.announcement.link,
+          description: o.description || o.title || "",
+          link: o.linkValue || banner.announcementLink || "",
           bg, color,
         });
         return;
       }
       setOffer({
-        description: banner.announcementText || brandConfig.content.announcement.text,
-        link: banner.announcementLink || brandConfig.content.announcement.link,
+        description: banner.announcementText || "",
+        link: banner.announcementLink || "",
         bg, color,
       });
     });

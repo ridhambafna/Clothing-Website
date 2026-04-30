@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { v2 as cloudinary } from "cloudinary";
 
 export const runtime = "nodejs";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,17 +23,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Max 8 MB" }, { status: 400 });
     }
 
-    const ext = file.type.split("/")[1].replace("jpeg", "jpg");
-    const stamp = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-    const safeName = `${stamp}.${ext}`;
+    // Convert file to base64 data URI for Cloudinary upload
+    const bytes = await file.arrayBuffer();
+    const base64 = Buffer.from(bytes).toString("base64");
+    const dataUri = `data:${file.type};base64,${base64}`;
 
-    const uploadsDir = path.join(process.cwd(), "public", "uploads");
-    await mkdir(uploadsDir, { recursive: true });
-    const buf = Buffer.from(await file.arrayBuffer());
-    await writeFile(path.join(uploadsDir, safeName), buf);
+    const result = await cloudinary.uploader.upload(dataUri, {
+      folder: "millazo-products",
+      resource_type: "image",
+      transformation: [
+        { quality: "auto", fetch_format: "auto" }, // auto-optimize
+      ],
+    });
 
-    return NextResponse.json({ url: `/uploads/${safeName}` });
+    return NextResponse.json({ url: result.secure_url });
   } catch (e: any) {
+    console.error("Upload error:", e);
     return NextResponse.json({ error: e.message || "Upload failed" }, { status: 500 });
   }
 }

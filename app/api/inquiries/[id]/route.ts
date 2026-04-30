@@ -10,6 +10,12 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const body = await req.json();
     const doc = await Inquiry.findByIdAndUpdate(id, body, { new: true }).lean();
     if (!doc) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    
+    // Simulate sending email if resolved
+    if (body.status === "resolved") {
+      console.log(`[EMAIL SENT] To: ${doc.email} | Subject: Your inquiry has been resolved | Message: Dear ${doc.name}, we have resolved your inquiry regarding ${doc.productName || "our products"}. Thank you for reaching out to Millazo.`);
+    }
+
     return NextResponse.json(doc);
   } catch (e: any) { return NextResponse.json({ error: e.message }, { status: 400 }); }
 }

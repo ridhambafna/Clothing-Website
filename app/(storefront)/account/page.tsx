@@ -255,15 +255,27 @@ function Orders({ orders }: { orders: any[] }) {
         <p className="text-sm text-neutral-500 font-light py-8 border-t border-neutral-200">No orders yet. <Link href="/collections" className="underline">Discover collections</Link></p>
       ) : (
         <div className="space-y-3">
-          {orders.map((o: any) => (
-            <div key={o._id} className="border border-neutral-200 bg-white p-5 flex justify-between items-center">
-              <div>
-                <p className="font-mono text-xs">#{o._id.slice(-8).toUpperCase()}</p>
-                <p className="text-sm mt-1">{o.items?.length || 0} items · ₹{o.total?.toLocaleString("en-IN")}</p>
+          {orders.map((o: any) => {
+            const isPending = o.status === "pending" || o.status === "processing";
+            const isDelivered = o.status === "delivered";
+            return (
+              <div key={o._id} className="border border-neutral-200 bg-white p-5 flex justify-between items-center">
+                <div>
+                  <p className="font-mono text-xs">#{o._id.slice(-8).toUpperCase()}</p>
+                  <p className="text-sm mt-1">{o.items?.length || 0} items · ₹{o.total?.toLocaleString("en-IN")}</p>
+                  <div className="mt-3 flex gap-3">
+                    {isPending && (
+                      <Link href={`/account/requests?orderId=${o._id}&type=cancel`} className="text-[10px] uppercase tracking-[0.2em] border border-[#8C001A] text-[#8C001A] px-3 py-1 hover:bg-[#8C001A] hover:text-white transition">Cancel Order</Link>
+                    )}
+                    {isDelivered && (
+                      <Link href={`/account/requests?orderId=${o._id}&type=return`} className="text-[10px] uppercase tracking-[0.2em] border border-black text-black px-3 py-1 hover:bg-black hover:text-white transition">Return Order</Link>
+                    )}
+                  </div>
+                </div>
+                <span className="text-xs uppercase tracking-[0.2em] px-3 py-1 border border-neutral-200">{o.status}</span>
               </div>
-              <span className="text-xs uppercase tracking-[0.2em] px-3 py-1 border border-neutral-200">{o.status}</span>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

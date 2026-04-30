@@ -119,6 +119,26 @@ export default function CrudTable({ resource, fields, columns, defaultValues = {
             <div className="space-y-4">
               {fields.map((f) => <FormField key={f.key} field={f} value={form[f.key]} onChange={(v) => setForm((p) => ({ ...p, [f.key]: v }))} />)}
             </div>
+            
+            {resource === "products" && form.salePrice > 0 && form.price > 0 && (
+              <div className="mt-8 border border-[#C5A572] bg-[#F8F6F2] p-6">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 mb-4">Offer Preview (Storefront)</p>
+                <div className="w-64 bg-white border border-[#E8E2D5] p-4 shadow-sm">
+                  {form.image ? (
+                    <img src={form.image} alt="Preview" className="w-full aspect-[4/5] object-cover mb-3" />
+                  ) : (
+                    <div className="w-full aspect-[4/5] bg-neutral-100 mb-3 flex items-center justify-center text-xs text-neutral-400">No Image</div>
+                  )}
+                  <h3 className="mb-1 font-heading text-sm uppercase tracking-[0.15em] text-[#222] truncate">{form.name || "Product Name"}</h3>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm text-[#222]">₹{Number(form.salePrice).toLocaleString("en-IN")}</p>
+                    <p className="text-xs text-[#777] line-through">₹{Number(form.price).toLocaleString("en-IN")}</p>
+                  </div>
+                  <span className="absolute top-8 left-8 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] rounded-full bg-[#8B1A1A] text-white">SALE</span>
+                </div>
+              </div>
+            )}
+            
             <div className="flex gap-3 mt-8">
               <button onClick={cancel} className="flex-1 border border-neutral-200 py-3 text-xs uppercase tracking-[0.2em] hover:border-black transition">Cancel</button>
               <button onClick={save} disabled={saving} className="flex-1 bg-black text-white py-3 text-xs uppercase tracking-[0.2em] hover:bg-neutral-800 transition disabled:opacity-50">

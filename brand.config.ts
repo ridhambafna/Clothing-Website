@@ -43,14 +43,14 @@ export const brandConfig = {
 
   seo: {
     title: "MILLAZO — Premium Shirting & Kurta Fabrics",
-    description: "Italian-inspired premium fabrics. Timeless design, uncompromised quality.",
+    description: "Indian-inspired premium fabrics. Timeless design, uncompromised quality.",
     keywords: ["fabric", "shirting", "kurta", "premium", "luxury", "cotton", "linen"],
   },
 
   content: {
     hero: {
       title: "Timeless Design, Uncompromised Quality",
-      subtitle: "Italian-inspired premium fabrics for the modern wardrobe.",
+      subtitle: "Indian-inspired premium fabrics for the modern wardrobe.",
       cta: "Explore Fabrics",
       image: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=2000&auto=format&fit=crop",
     },

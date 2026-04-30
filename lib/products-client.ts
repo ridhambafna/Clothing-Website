@@ -7,7 +7,7 @@ export function normalizeDbProduct(d: any): Product {
   return {
     _id: String(d._id),
     name: d.name || "",
-    price: Number(d.price) || 0,
+    price: Number(d.salePrice || d.price) || 0,
     originalPrice: d.salePrice ? Number(d.price) : (d.originalPrice ?? undefined),
     slug: d.slug || (d.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
     image: d.image || "",

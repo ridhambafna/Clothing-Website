@@ -11,7 +11,7 @@ export default function FeaturedCollections() {
   const { flags } = useApp();
   const [collections, setCollections] = useState<Col[]>(brandConfig.content.collections);
 
-  const LEGACY_SLUGS = new Set(["rings","necklaces","earrings","bangles","anklets","bracelets","pendants","chains","studs","hoops"]);
+  const LEGACY_SLUGS = new Set(["rings", "necklaces", "earrings", "bangles", "anklets", "bracelets", "pendants", "chains", "studs", "hoops"]);
 
   useEffect(() => {
     fetch("/api/collections", { cache: "no-store" })
@@ -20,7 +20,7 @@ export default function FeaturedCollections() {
         const onHome = data.filter((c) => c.showOnHome !== false && !LEGACY_SLUGS.has(c.slug));
         if (onHome.length > 0) setCollections(onHome.map((c) => ({ name: c.name, slug: c.slug, image: c.image })));
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   if (!flags.featuredCollections) return null;
@@ -29,7 +29,7 @@ export default function FeaturedCollections() {
     <section className="mx-auto max-w-7xl px-8 py-28">
       <div className="mb-16 text-center">
         <p className="mb-3 text-xs uppercase tracking-[0.3em] text-neutral-500">Our Collections</p>
-        <h2 className="font-heading text-4xl uppercase tracking-[0.15em]">The Edit</h2>
+        <h2 className="font-heading text-4xl uppercase tracking-[0.15em]">Millazo</h2>
       </div>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {collections.map((col, idx) => (

@@ -23,6 +23,7 @@ export function AppProvider({ children, initialFlags }: { children: React.ReactN
   const [flags, setFlags] = useState<FeatureFlags>({ ...DEFAULT_FLAGS, ...(initialFlags || {}) });
   const [authPopupOpen, setAuthPopupOpen] = useState(false);
   const [user, setUser] = useState<AppContextType["user"]>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const [popupShownThisSession, setPopupShownThisSession] = useState(false);
 
   const refreshFlags = useCallback(async () => {
@@ -54,23 +55,27 @@ export function AppProvider({ children, initialFlags }: { children: React.ReactN
       const dismissed = sessionStorage.getItem("lux-auth-popup-dismissed");
       if (dismissed === "1") setPopupShownThisSession(true);
     } catch {}
+    setIsMounted(true);
   }, [refreshFlags]);
 
   useEffect(() => {
+    if (!isMounted) return;
     if (user) {
       try { sessionStorage.setItem("lux-user", JSON.stringify(user)); } catch {}
     } else {
       try { sessionStorage.removeItem("lux-user"); } catch {}
     }
-  }, [user]);
+  }, [user, isMounted]);
 
-  // Auto-open after 10s if flag on, no user, not yet shown
+  // Auto-open after 10s if flag on, no user, not yet shown, and NOT on admin panel
   useEffect(() => {
     if (!flags.autoAuthPopup) return;
     if (user) return;
     if (popupShownThisSession) return;
+    if (typeof window !== "undefined" && window.location.pathname.startsWith("/admin")) return;
+    
     const t = setTimeout(() => {
-      if (!user) {
+      if (!user && !(typeof window !== "undefined" && window.location.pathname.startsWith("/admin"))) {
         setAuthPopupOpen(true);
         setPopupShownThisSession(true);
       }

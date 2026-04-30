@@ -1,3 +1,5 @@
+import AdminNotifications from "./AdminNotifications";
+
 export default function PageShell({ title, subtitle, children, actions }: { title: string; subtitle?: string; children: React.ReactNode; actions?: React.ReactNode; }) {
   return (
     <div>
@@ -7,7 +9,12 @@ export default function PageShell({ title, subtitle, children, actions }: { titl
           <h1 className="font-heading text-3xl uppercase tracking-[0.15em]">{title}</h1>
           {subtitle && <p className="text-sm text-neutral-500 mt-1 font-light">{subtitle}</p>}
         </div>
-        <div className="flex gap-2">{actions}</div>
+        <div className="flex gap-4 items-center">
+          {actions}
+          <div className="border-l border-neutral-200 pl-4 h-6 flex items-center">
+            <AdminNotifications />
+          </div>
+        </div>
       </div>
       {children}
     </div>

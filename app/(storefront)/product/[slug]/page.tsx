@@ -26,25 +26,28 @@ type SizeAction = "bag" | "wishlist" | "buynow";
 export default function ProductPage({ params }: Props) {
   const { slug } = use(params);
   const router = useRouter();
-  const [product, setProduct] = useState<Product>(() => MOCK_PRODUCTS.find((p) => p.slug === slug) ?? MOCK_PRODUCTS[0]);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetchProducts().then((all) => {
       const found = all.find((p) => p.slug === slug);
       if (found) setProduct(found);
-    });
+      setLoading(false);
+    }).catch(() => setLoading(false));
   }, [slug]);
   const { addToCart, toggleWishlist, wishlist } = useCart();
   const { flags } = useApp();
 
-  const [material, setMaterial] = useState(JEWELLERY_MATERIALS[0]);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [sizePopup, setSizePopup] = useState<SizeAction | null>(null);
   const [sharePopup, setSharePopup] = useState(false);
   const [feedback, setFeedback] = useState("");
 
-  const isWishlisted = wishlist.includes(product._id);
+  const isWishlisted = product ? wishlist.includes(product._id) : false;
   const isJewellery = brandConfig.type === "jewellery";
 
   function performAction(size: string, action: SizeAction) {
+    if (!product) return;
     if (action === "bag") {
       addToCart({
         productId: product._id,
@@ -67,7 +70,7 @@ export default function ProductPage({ params }: Props) {
           size,
           quantity: 1,
         }));
-      } catch {}
+      } catch { }
       router.push("/checkout?mode=buynow");
     } else if (action === "wishlist") {
       toggleWishlist(product._id);
@@ -77,13 +80,41 @@ export default function ProductPage({ params }: Props) {
   }
 
   function trigger(action: SizeAction) {
-    const flagKey = action === "wishlist" ? "sizePopupBeforeWishlist" : "sizePopupBeforeBag";
-    if (flags[flagKey]) {
-      setSizePopup(action);
-    } else {
-      // perform with default size
-      performAction("M", action);
+    if (action === "wishlist") {
+      performAction("", "wishlist");
+      return;
     }
+    
+    if (!selectedSize) {
+      setFeedback("Please select a size");
+      setTimeout(() => setFeedback(""), 2000);
+      return;
+    }
+
+    if (selectedSize === "Custom Fit") {
+      setSizePopup(action);
+      return;
+    }
+
+    performAction(selectedSize, action);
+  }
+
+  if (loading) {
+    return (
+      <div className="mx-auto max-w-7xl px-8 py-32 text-center">
+        <div className="inline-block w-8 h-8 border-2 border-neutral-200 border-t-[#C5A572] rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="mx-auto max-w-7xl px-8 py-32 text-center">
+        <h1 className="font-heading text-3xl uppercase tracking-[0.15em] mb-4">Product Not Found</h1>
+        <p className="text-sm text-neutral-500 mb-8">The product you're looking for doesn't exist or has been removed.</p>
+        <Link href="/collections" className="btn-primary">Browse Collections</Link>
+      </div>
+    );
   }
 
   return (
@@ -113,37 +144,27 @@ export default function ProductPage({ params }: Props) {
           <p className="mb-8 text-xs uppercase tracking-[0.2em] text-neutral-500">Tax included. Free shipping.</p>
           <p className="mb-10 text-sm leading-loose font-light text-neutral-600">{product.description}</p>
 
-          {isJewellery && (
-            <div className="mb-8">
-              <p className="mb-4 text-xs uppercase tracking-[0.2em]">Material: <span className="font-normal">{material}</span></p>
-              <div className="flex gap-3">
-                {JEWELLERY_MATERIALS.map((m) => (
-                  <button key={m} onClick={() => setMaterial(m)}
-                    className={`h-9 px-4 text-xs uppercase tracking-[0.15em] border transition ${material === m ? "bg-black text-white border-black" : "border-neutral-300 text-black"}`}>
-                    {m}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
 
-          {/* Available sizes (display only — picker is in the popup) */}
+
+          {/* Available sizes */ }
           <div className="mb-6">
-            <p className="mb-3 text-xs uppercase tracking-[0.2em] text-[#777]">Available Sizes</p>
+            <p className="mb-3 text-xs uppercase tracking-[0.2em] text-[#777]">Select Size</p>
             <div className="flex flex-wrap gap-2">
               {((Array.isArray((product as any).sizes) && (product as any).sizes.length > 0)
                 ? (product as any).sizes
-                : (brandConfig.type === "jewellery" ? ["6","7","8","9","10"] : ["XS","S","M","L","XL","XXL"])
+                : (brandConfig.type === "jewellery" ? ["6", "7", "8", "9", "10"] : ["XS", "S", "M", "L", "XL", "XXL"])
               ).map((s: string) => (
-                <span key={s} className="px-3 h-9 inline-flex items-center justify-center text-xs uppercase tracking-[0.15em] border border-[#E8E2D5] text-[#222]">
+                <button key={s} onClick={() => setSelectedSize(s)}
+                  className={`px-3 h-9 inline-flex items-center justify-center text-xs uppercase tracking-[0.15em] border transition ${selectedSize === s ? "bg-black text-white border-black" : "border-[#E8E2D5] text-[#222] hover:border-black"}`}>
                   {s}
-                </span>
+                </button>
               ))}
-              <span className="px-3 h-9 inline-flex items-center justify-center text-xs uppercase tracking-[0.15em] border border-[#C5A572] text-[#C5A572]">
+              <button onClick={() => setSelectedSize("Custom Fit")}
+                className={`px-3 h-9 inline-flex items-center justify-center text-xs uppercase tracking-[0.15em] border transition ${selectedSize === "Custom Fit" ? "bg-[#C5A572] text-white border-[#C5A572]" : "border-[#C5A572] text-[#C5A572] hover:bg-[#C5A572] hover:text-white"}`}>
                 Custom Fit
-              </span>
+              </button>
             </div>
-            <p className="text-xs text-[#777] mt-2 font-light">Pick your size on Add to Bag — or choose Custom Fit and our team will measure you.</p>
+            <p className="text-xs text-[#777] mt-2 font-light">Select your size or choose Custom Fit for tailored measurements.</p>
           </div>
 
           {feedback && (
@@ -210,8 +231,8 @@ export default function ProductPage({ params }: Props) {
         customSizes={Array.isArray((product as any).sizes) && (product as any).sizes.length > 0 ? (product as any).sizes : undefined}
         title={
           sizePopup === "bag" ? "Choose Size to Add" :
-          sizePopup === "buynow" ? "Choose Size to Buy" :
-          "Choose Size to Save"
+            sizePopup === "buynow" ? "Choose Size to Buy" :
+              "Choose Size to Save"
         }
         onSelect={(size) => { const action = sizePopup; setSizePopup(null); if (action) performAction(size, action); }}
       />

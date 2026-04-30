@@ -74,33 +74,33 @@ export default function CategoriesPage() {
 
       {loading ? <div className="py-20 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></div>
         : rows.length === 0 ? <p className="py-20 text-center text-sm text-neutral-500">No collections yet.</p>
-        : (
-          <div className="border border-[#E8E2D5] bg-white">
-            <table className="w-full">
-              <thead className="border-b border-[#E8E2D5] bg-[#F8F6F2]">
-                <tr>{["", "Name", "Slug", "Products", "On Home", "Order", "Actions"].map((h) => <th key={h} className="px-5 py-3 text-left text-xs uppercase tracking-[0.15em] text-[#777]">{h}</th>)}</tr>
-              </thead>
-              <tbody>
-                {rows.map((c) => (
-                  <tr key={c._id} className="border-b border-[#F0EBDF] last:border-b-0 hover:bg-[#F8F6F2]">
-                    <td className="px-5 py-3">{c.image ? <img src={c.image} alt="" className="w-12 h-14 object-cover" /> : <div className="w-12 h-14 bg-neutral-100" />}</td>
-                    <td className="px-5 py-3 text-sm">{c.name}</td>
-                    <td className="px-5 py-3 text-sm font-mono">/{c.slug}</td>
-                    <td className="px-5 py-3 text-sm">{Array.isArray(c.productIds) ? c.productIds.length : 0}</td>
-                    <td className="px-5 py-3 text-sm">{c.showOnHome ? "Yes" : "No"}</td>
-                    <td className="px-5 py-3 text-sm">{c.order ?? 0}</td>
-                    <td className="px-5 py-3 text-right">
-                      <div className="flex justify-end gap-3">
-                        <button onClick={() => edit(c)} className="text-neutral-500 hover:text-black"><Edit3 className="w-4 h-4" /></button>
-                        <button onClick={() => remove(c._id)} className="text-neutral-500 hover:text-[#8B1A1A]"><Trash2 className="w-4 h-4" /></button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+          : (
+            <div className="border border-[#E8E2D5] bg-white">
+              <table className="w-full">
+                <thead className="border-b border-[#E8E2D5] bg-[#F8F6F2]">
+                  <tr>{["", "Name", "Slug", "Products", "On Home", "Order", "Actions"].map((h) => <th key={h} className="px-5 py-3 text-left text-xs uppercase tracking-[0.15em] text-[#777]">{h}</th>)}</tr>
+                </thead>
+                <tbody>
+                  {rows.map((c) => (
+                    <tr key={c._id} className="border-b border-[#F0EBDF] last:border-b-0 hover:bg-[#F8F6F2]">
+                      <td className="px-5 py-3">{c.image ? <img src={c.image} alt="" className="w-12 h-14 object-cover" /> : <div className="w-12 h-14 bg-neutral-100" />}</td>
+                      <td className="px-5 py-3 text-sm">{c.name}</td>
+                      <td className="px-5 py-3 text-sm font-mono">/{c.slug}</td>
+                      <td className="px-5 py-3 text-sm">{Array.isArray(c.productIds) ? c.productIds.length : 0}</td>
+                      <td className="px-5 py-3 text-sm">{c.showOnHome ? "Yes" : "No"}</td>
+                      <td className="px-5 py-3 text-sm">{c.order ?? 0}</td>
+                      <td className="px-5 py-3 text-right">
+                        <div className="flex justify-end gap-3">
+                          <button onClick={() => edit(c)} className="text-neutral-500 hover:text-black"><Edit3 className="w-4 h-4" /></button>
+                          <button onClick={() => remove(c._id)} className="text-neutral-500 hover:text-[#8B1A1A]"><Trash2 className="w-4 h-4" /></button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
       {editing && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
@@ -118,7 +118,7 @@ export default function CategoriesPage() {
                 <div>
                   <label className="block text-xs uppercase tracking-[0.2em] text-[#777] mb-2">Slug</label>
                   <input value={editing.slug || ""} onChange={(e) => setEditing({ ...editing, slug: e.target.value })}
-                    className="w-full border border-[#E8E2D5] px-4 py-3 text-sm outline-none focus:border-[#C5A572] font-mono" placeholder="shirting" />
+                    className="w-full border border-[#E8E2D5] px-4 py-3 text-sm outline-none focus:border-[#C5A572] font-mono" placeholder="shirts" />
                 </div>
               </div>
               <div>

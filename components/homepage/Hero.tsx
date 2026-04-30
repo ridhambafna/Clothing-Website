@@ -25,7 +25,7 @@ export default function Hero() {
           cta: d.heroCta || prev.cta,
         }));
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   if (!flags.heroBanner) return null;

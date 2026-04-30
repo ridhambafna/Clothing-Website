@@ -5,7 +5,7 @@ import Link from "next/link";
 import PageShell from "@/components/admin/PageShell";
 import { Loader2, Eye } from "lucide-react";
 
-type Tab = "all" | "purchased" | "no_purchases";
+type Tab = "all" | "purchased" | "no_purchases" | "top_spenders" | "recent_customers";
 
 export default function CustomersPage() {
   const [list, setList] = useState<any[]>([]);
@@ -23,9 +23,12 @@ export default function CustomersPage() {
   useEffect(() => { load(); }, []);
 
   const filtered = useMemo(() => {
-    if (tab === "purchased") return list.filter((c) => (c.orderCount || 0) > 0);
-    if (tab === "no_purchases") return list.filter((c) => (c.orderCount || 0) === 0);
-    return list;
+    let res = [...list];
+    if (tab === "purchased") res = res.filter((c) => (c.orderCount || 0) > 0);
+    else if (tab === "no_purchases") res = res.filter((c) => (c.orderCount || 0) === 0);
+    else if (tab === "top_spenders") res = res.sort((a, b) => (b.totalSpent || 0) - (a.totalSpent || 0));
+    else if (tab === "recent_customers") res = res.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return res;
   }, [list, tab]);
 
   async function toggleBlock(id: string, blocked: boolean) {
@@ -37,12 +40,14 @@ export default function CustomersPage() {
     <PageShell title="Customers" subtitle="Registered customer accounts and their order history.">
       <div className="flex gap-2 mb-6 border-b border-[#E8E2D5]">
         {([
-          { k: "all", l: `All Customers (${list.length})` },
-          { k: "purchased", l: `Has Purchased (${list.filter(c => (c.orderCount||0) > 0).length})` },
+          { k: "all", l: `All (${list.length})` },
+          { k: "purchased", l: `Purchased (${list.filter(c => (c.orderCount||0) > 0).length})` },
           { k: "no_purchases", l: `No Purchases (${list.filter(c => (c.orderCount||0) === 0).length})` },
+          { k: "top_spenders", l: `Top Spenders` },
+          { k: "recent_customers", l: `Recent` },
         ] as const).map((t) => (
           <button key={t.k} onClick={() => setTab(t.k)}
-            className={`pb-3 px-4 text-xs uppercase tracking-[0.2em] transition border-b-2 -mb-px ${tab === t.k ? "border-[#C5A572] text-[#C5A572]" : "border-transparent text-[#777] hover:text-[#222]"}`}>
+            className={`pb-3 px-4 text-[10px] sm:text-xs uppercase tracking-[0.2em] transition border-b-2 -mb-px whitespace-nowrap ${tab === t.k ? "border-[#C5A572] text-[#C5A572]" : "border-transparent text-[#777] hover:text-[#222]"}`}>
             {t.l}
           </button>
         ))}

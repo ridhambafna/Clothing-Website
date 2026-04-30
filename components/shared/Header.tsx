@@ -15,8 +15,8 @@ interface NavLink { label: string; href: string; children?: { label: string; hre
 
 const FALLBACK_NAV: NavLink[] = [
   { label: "Collections", href: "/collections" },
-  { label: "Shirting", href: "/collections/shirting" },
-  { label: "Kurta", href: "/collections/kurta" },
+  { label: "Shirts", href: "/collections/shirts" },
+  { label: "Ethnic", href: "/collections/ethnic" },
   { label: "Linen", href: "/collections/linen" },
   { label: "Contact", href: "/p/contact-us" },
 ];
@@ -36,7 +36,7 @@ export default function Header() {
     fetch("/api/navbar", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : []))
       .then((data: NavLink[]) => { if (Array.isArray(data) && data.length > 0) setNavLinks(data); })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   useEffect(() => { if (searchOpen && inputRef.current) inputRef.current.focus(); }, [searchOpen]);

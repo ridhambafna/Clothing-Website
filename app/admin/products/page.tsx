@@ -19,12 +19,16 @@ export default function ProductsPage() {
           { key: "image", label: "Main Image", type: "image" },
           { key: "gallery", label: "Gallery Images", type: "gallery" },
           { key: "description", label: "Description", type: "textarea" },
-          { key: "category", label: "Category", placeholder: "shirting | kurta | linen" },
+          { key: "category", label: "Category", placeholder: "shirts | ethnic | linen" },
           { key: "collectionSlug", label: "Collection", placeholder: "e.g. checks, stripes" },
-          { key: "fabricType", label: "Fabric Type", type: "select",
-            options: FABRIC_TYPES.map((f) => ({ value: f, label: f })) },
-          { key: "careInstructions", label: "Care Instructions", type: "textarea",
-            placeholder: "e.g. Dry clean only. Iron on low heat." },
+          {
+            key: "fabricType", label: "Fabric Type", type: "select",
+            options: FABRIC_TYPES.map((f) => ({ value: f, label: f }))
+          },
+          {
+            key: "careInstructions", label: "Care Instructions", type: "textarea",
+            placeholder: "e.g. Dry clean only. Iron on low heat."
+          },
           { key: "sku", label: "SKU" },
           { key: "stock", label: "Stock Quantity", type: "number" },
           { key: "sizes", label: "Available Sizes (comma-separated)", placeholder: "S, M, L, XL" },
