@@ -27,7 +27,7 @@ export default function CollectionPage({ params }: Props) {
   useEffect(() => {
     fetch("/api/settings", { cache: "no-store" })
       .then(r => r.ok ? r.json() : {})
-      .then(data => {
+      .then((data: any) => {
         setFilterOpts({
           sizes: (data.filterSizes || "XS,S,M,L,XL,XXL").split(",").map((s: string) => s.trim()).filter(Boolean),
           colors: (data.filterColors || "Red,Blue,Black,White").split(",").map((s: string) => s.trim()).filter(Boolean),
@@ -64,7 +64,7 @@ export default function CollectionPage({ params }: Props) {
 
   const filtered = useMemo(() => {
     let items = [...collectionProducts];
-    if (filters.sizes.length) items = items.filter((p) => p.sizes?.some(s => filters.sizes.includes(s)));
+    if (filters.sizes.length) items = items.filter((p) => (p as any).sizes?.some((s: string) => filters.sizes.includes(s)));
     if (filters.colors.length) items = items.filter((p) => (p as any).colors?.some((c: string) => filters.colors.includes(c)));
     if (filters.collections.length) items = items.filter((p) => p.collection && filters.collections.includes(p.collection));
     if (filters.inStockOnly) items = items.filter((p) => p.inStock);
