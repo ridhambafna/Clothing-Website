@@ -8,7 +8,11 @@ export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
     if (!email || !password) return NextResponse.json({ error: "Email and password required" }, { status: 400 });
-
+    if (isAdminCreds(email, password)) {
+      const user = { id: "saas-admin-1", email, name: "Super Admin", role: "admin" as const };
+      await setSessionCookie(user);
+      return NextResponse.json({ user });
+    }
 
 
     const conn = await connectDB();
