@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
-import { ALL_METALS, ALL_STONES, ALL_COLLECTIONS } from "@/lib/mock-data";
 
 export type SortKey =
   | "newest"
@@ -11,8 +10,8 @@ export type SortKey =
   | "price-desc";
 
 export interface Filters {
-  metals: string[];
-  stones: string[];
+  sizes: string[];
+  colors: string[];
   collections: string[];
   inStockOnly: boolean;
   priceMin: number;
@@ -20,8 +19,8 @@ export interface Filters {
 }
 
 export const DEFAULT_FILTERS: Filters = {
-  metals: [],
-  stones: [],
+  sizes: [],
+  colors: [],
   collections: [],
   inStockOnly: false,
   priceMin: 0,
@@ -41,15 +40,17 @@ interface Props {
   setFilters: (f: Filters) => void;
   sort: SortKey;
   setSort: (s: SortKey) => void;
+  availableSizes?: string[];
+  availableColors?: string[];
 }
 
-export default function FilterSortBar({ total, filters, setFilters, sort, setSort }: Props) {
+export default function FilterSortBar({ total, filters, setFilters, sort, setSort, availableSizes = [], availableColors = [] }: Props) {
   const [open, setOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
   const activeCount =
-    filters.metals.length +
-    filters.stones.length +
+    filters.sizes.length +
+    filters.colors.length +
     filters.collections.length +
     (filters.inStockOnly ? 1 : 0) +
     (filters.priceMax < 10000 || filters.priceMin > 0 ? 1 : 0);
@@ -138,44 +139,33 @@ export default function FilterSortBar({ total, filters, setFilters, sort, setSor
               </button>
             </div>
 
-            <FilterSection title="Fabric Type">
-              {ALL_METALS.map((m) => (
-                <Checkbox
-                  key={m}
-                  label={m}
-                  checked={filters.metals.includes(m)}
-                  onChange={() =>
-                    setFilters({ ...filters, metals: toggleArr(filters.metals, m) })
-                  }
-                />
-              ))}
-            </FilterSection>
-
-            <FilterSection title="Pattern / Weave">
-              {ALL_STONES.map((s) => (
+            <FilterSection title="Size">
+              {availableSizes.map((s) => (
                 <Checkbox
                   key={s}
                   label={s}
-                  checked={filters.stones.includes(s)}
+                  checked={filters.sizes.includes(s)}
                   onChange={() =>
-                    setFilters({ ...filters, stones: toggleArr(filters.stones, s) })
+                    setFilters({ ...filters, sizes: toggleArr(filters.sizes, s) })
                   }
                 />
               ))}
             </FilterSection>
 
-            <FilterSection title="Collection">
-              {ALL_COLLECTIONS.map((c) => (
+            <FilterSection title="Color">
+              {availableColors.map((c) => (
                 <Checkbox
                   key={c}
-                  label={c.charAt(0).toUpperCase() + c.slice(1)}
-                  checked={filters.collections.includes(c)}
+                  label={c}
+                  checked={filters.colors.includes(c)}
                   onChange={() =>
-                    setFilters({ ...filters, collections: toggleArr(filters.collections, c) })
+                    setFilters({ ...filters, colors: toggleArr(filters.colors, c) })
                   }
                 />
               ))}
             </FilterSection>
+
+
 
             <FilterSection title="Availability">
               <Checkbox

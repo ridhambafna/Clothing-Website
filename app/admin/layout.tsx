@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { brandConfig } from "@/brand.config";
 import AdminLogout from "@/components/admin/AdminLogout";
+import AdminGlobalHeader from "@/components/admin/AdminGlobalHeader";
 import {
   LayoutDashboard, Package, Tag, ShoppingCart, Settings, ArrowLeft,
   Users, Image as ImgIcon, BarChart3, Truck, Percent, Megaphone,
@@ -58,7 +59,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <AdminLogout />
         </div>
       </aside>
-      <main className="flex-1 overflow-auto p-10">{children}</main>
+      <main className="flex flex-1 flex-col overflow-hidden">
+        <AdminGlobalHeader />
+        <div className="flex-1 overflow-auto p-10">{children}</div>
+      </main>
     </div>
   );
 }

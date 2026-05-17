@@ -40,8 +40,8 @@ export default function CustomersPage() {
     <PageShell title="Customers" subtitle="Registered customer accounts and their order history.">
       <div className="flex gap-2 mb-6 border-b border-[#E8E2D5]">
         {([
-          { k: "all", l: `All (${list.length})` },
-          { k: "purchased", l: `Purchased (${list.filter(c => (c.orderCount||0) > 0).length})` },
+          { k: "all", l: `All Customers (${list.length})` },
+          { k: "purchased", l: `Has Purchased (${list.filter(c => (c.orderCount||0) > 0).length})` },
           { k: "no_purchases", l: `No Purchases (${list.filter(c => (c.orderCount||0) === 0).length})` },
           { k: "top_spenders", l: `Top Spenders` },
           { k: "recent_customers", l: `Recent` },

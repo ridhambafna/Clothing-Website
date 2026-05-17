@@ -13,7 +13,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     
     // Simulate sending email if resolved
     if (body.status === "resolved") {
-      console.log(`[EMAIL SENT] To: ${doc.email} | Subject: Your inquiry has been resolved | Message: Dear ${doc.name}, we have resolved your inquiry regarding ${doc.productName || "our products"}. Thank you for reaching out to Millazo.`);
+      const resolutionNotes = body.resolutionNotes || "We have reviewed your request and taken the appropriate action.";
+      console.log(`[EMAIL SENT] To: ${doc.email} | Subject: Your inquiry has been resolved | Message: Original Inquiry: ${doc.message} | Resolution: ${resolutionNotes}`);
     }
 
     return NextResponse.json(doc);

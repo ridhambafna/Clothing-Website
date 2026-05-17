@@ -24,7 +24,7 @@ export default function NavbarAdmin() {
   async function addLink(parentId?: string) {
     const label = prompt(parentId ? "Submenu label" : "Nav link label");
     if (!label) return;
-    const href = prompt("URL (e.g. /collections/shirting)") || "/";
+    const href = prompt("URL (e.g. /collections/shirts)") || "/";
     const order = links.filter((l) => l.parentId === parentId).length;
     await fetch("/api/navbar", {
       method: "POST", headers: { "Content-Type": "application/json" },

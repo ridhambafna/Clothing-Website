@@ -36,9 +36,14 @@ export default function ProductCard({ product, showBadges = true }: Props) {
     <Link href={`/product/${product.slug}`} className="group block"
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
       <div className="relative overflow-hidden aspect-[4/5] mb-5 bg-[#F8F6F2] transition group-hover:shadow-lg group-hover:border-b-2 group-hover:border-b-[#C5A572]">
-        <img src={product.image} alt={product.name}
-          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
-          style={{ opacity: showSecondary ? 0 : 1 }} />
+        {product.image ? (
+          <img src={product.image} alt={product.name}
+            className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
+            style={{ opacity: showSecondary ? 0 : 1 }} />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-neutral-100 text-neutral-400 text-xs uppercase tracking-[0.2em]"
+            style={{ opacity: showSecondary ? 0 : 1 }}>No Image</div>
+        )}
         {secondaryImage && (
           <img src={secondaryImage} alt={product.name}
             className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500 scale-105"

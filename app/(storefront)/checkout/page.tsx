@@ -27,7 +27,7 @@ export default function CheckoutPage() {
 
 function CheckoutInner() {
   const { cart, totalPrice, removeFromCart } = useCart();
-  const { flags } = useApp();
+  const { flags, user } = useApp();
   const router = useRouter();
   const searchParams = useSearchParams();
   const isBuyNow = searchParams.get("mode") === "buynow";
@@ -127,11 +127,13 @@ function CheckoutInner() {
   }
 
   function clearBuyNowAndCart() {
-    if (!isBuyNow || !buyNowItem) return;
-    try { sessionStorage.removeItem("lux-buynow"); } catch {}
-    // If the bought item also exists in the user's cart (same product+size), remove it.
-    const dup = cart.find((c) => c.productId === buyNowItem.productId && c.size === buyNowItem.size);
-    if (dup) removeFromCart(dup.id);
+    if (isBuyNow && buyNowItem) {
+      try { sessionStorage.removeItem("lux-buynow"); } catch {}
+      const dup = cart.find((c) => c.productId === buyNowItem.productId && c.size === buyNowItem.size);
+      if (dup) removeFromCart(dup.id);
+    } else {
+      cart.forEach(c => removeFromCart(c.id));
+    }
   }
 
   async function placeOrder() {
@@ -156,8 +158,10 @@ function CheckoutInner() {
         const r = await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(orderBody) });
         if (!r.ok) { const d = await r.json().catch(() => ({})); alert(d.error || "Failed to place order"); return; }
         clearBuyNowAndCart();
+        try { sessionStorage.setItem("lux-auth-popup-dismissed", "1"); } catch {}
         alert(`Order placed! You will pay ${formatINR(finalTotal)} on delivery.`);
-        router.push("/account");
+        if (user) router.push("/account");
+        else router.push("/");
         return;
       }
 
@@ -177,8 +181,10 @@ function CheckoutInner() {
         handler: async (resp: any) => {
           await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...orderBody, paymentStatus: "done", razorpayOrderId: data.id, razorpayPaymentId: resp.razorpay_payment_id }) });
           clearBuyNowAndCart();
+          try { sessionStorage.setItem("lux-auth-popup-dismissed", "1"); } catch {}
           alert("Payment successful! Your order has been placed.");
-          router.push("/account");
+          if (user) router.push("/account");
+          else router.push("/");
         },
       };
       new window.Razorpay(opt).open();

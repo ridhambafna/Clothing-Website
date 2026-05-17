@@ -22,7 +22,7 @@ const KNOWN_TITLES: Record<string, string> = {
 
 const PLACEHOLDER_HTML: Record<string, string> = {
   "about-us": `
-    <p>Millazo is a premium fabrics house specialising in shirting, kurta, and natural-fibre weaves. Italian-inspired craftsmanship, hand-finished in our workshops, and made for the modern wardrobe.</p>
+    <p>Millazo is a premium fabrics house specialising in shirting, kurta, and natural-fibre weaves. Indian-inspired craftsmanship, hand-finished in our workshops, and made for the modern wardrobe.</p>
     <p>For collaborations and wholesale enquiries, write to us at <a href="mailto:hello@millazo.com">hello@millazo.com</a>.</p>
   `,
   "contact-us": `
@@ -35,7 +35,7 @@ const PLACEHOLDER_HTML: Record<string, string> = {
   `,
   "faq": `
     <h2>What fabrics do you offer?</h2>
-    <p>Premium shirting cotton, kurta cloth, linen blends, and silk weaves — all from trusted Italian and Indian mills.</p>
+    <p>Premium shirting cotton, kurta cloth, linen blends, and silk weaves — all from trusted Indian and Indian mills.</p>
     <h2>Do you offer custom tailoring?</h2>
     <p>Yes — select &quot;Custom Fit&quot; on any product page and our team will reach out to take your measurements.</p>
     <h2>What is the return policy?</h2>

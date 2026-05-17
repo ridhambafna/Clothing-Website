@@ -7,7 +7,7 @@ import { getSession } from "@/lib/auth-server";
 export async function POST(req: NextRequest) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (session.id === "saas-admin-1") return NextResponse.json({ error: "Cannot change master admin password" }, { status: 400 });
+
 
   try {
     const { current, next, confirm } = await req.json();

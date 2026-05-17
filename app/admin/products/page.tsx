@@ -32,6 +32,7 @@ export default function ProductsPage() {
           { key: "sku", label: "SKU" },
           { key: "stock", label: "Stock Quantity", type: "number" },
           { key: "sizes", label: "Available Sizes (comma-separated)", placeholder: "S, M, L, XL" },
+          { key: "colors", label: "Available Colors (comma-separated)", placeholder: "Red, Blue, Black" },
           { key: "tags", label: "Tags (comma-separated: NEW, BESTSELLER, SALE)", placeholder: "NEW, BESTSELLER" },
           { key: "inStock", label: "In Stock", type: "checkbox" },
           { key: "featured", label: "Featured on Homepage", type: "checkbox" },

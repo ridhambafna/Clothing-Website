@@ -10,7 +10,7 @@ function RequestsInner() {
   const { user } = useApp();
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
-  const type = searchParams.get("type"); // "cancel" or "return"
+  const type = searchParams.get("type"); // "cancel" or "return" or "exchange" or "refund"
   const router = useRouter();
 
   const [reason, setReason] = useState("");
@@ -33,7 +33,9 @@ function RequestsInner() {
   }
 
   const isReturn = type === "return";
-  const title = isReturn ? "Return Request" : "Cancellation Request";
+  const isExchange = type === "exchange";
+  const isRefund = type === "refund";
+  const title = isReturn ? "Return Request" : isExchange ? "Exchange Request" : isRefund ? "Refund Request" : "Cancellation Request";
   
   const returnReasons = [
     "Size doesn't fit",
@@ -51,7 +53,21 @@ function RequestsInner() {
     "Other",
   ];
 
-  const reasons = isReturn ? returnReasons : cancelReasons;
+  const exchangeReasons = [
+    "Need a different size",
+    "Need a different color",
+    "Item damaged or defective",
+    "Other",
+  ];
+
+  const refundReasons = [
+    "Item returned",
+    "Order cancelled but charged",
+    "Item damaged and don't want replacement",
+    "Other",
+  ];
+
+  const reasons = isReturn ? returnReasons : isExchange ? exchangeReasons : isRefund ? refundReasons : cancelReasons;
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -66,11 +82,11 @@ function RequestsInner() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          type: isReturn ? "return_request" : "cancellation_request",
+          type: isReturn ? "return_request" : isExchange ? "exchange_request" : isRefund ? "refund_request" : "cancellation_request",
           name: user!.name || user!.email,
           email: user!.email,
           phone: "N/A",
-          productName: `Order #${orderId.slice(-8).toUpperCase()}`,
+          productName: `Order #${orderId!.slice(-8).toUpperCase()}`,
           message: `Reason: ${reason}\n\nDetails: ${details}`,
         }),
       });
@@ -92,7 +108,7 @@ function RequestsInner() {
       <div className="mx-auto max-w-xl px-8 py-32 text-center">
         <h1 className="font-heading text-3xl uppercase tracking-[0.15em] mb-4">Request Submitted</h1>
         <p className="text-sm text-neutral-500 mb-8 font-light leading-relaxed">
-          We have received your {isReturn ? "return" : "cancellation"} request for Order <span className="font-mono text-black">#{orderId.slice(-8).toUpperCase()}</span>. 
+          We have received your {isReturn ? "return" : isExchange ? "exchange" : isRefund ? "refund" : "cancellation"} request for Order <span className="font-mono text-black">#{orderId.slice(-8).toUpperCase()}</span>. 
           Our team will review it and get back to you within 24-48 hours.
         </p>
         <Link href="/account" className="bg-black text-white px-8 py-4 text-xs uppercase tracking-[0.2em] hover:bg-neutral-800 transition">
@@ -115,7 +131,7 @@ function RequestsInner() {
 
       <form onSubmit={submit} className="space-y-6">
         <div>
-          <label className="mb-3 block text-xs uppercase tracking-[0.2em] text-neutral-500">Reason for {isReturn ? "Return" : "Cancellation"} *</label>
+          <label className="mb-3 block text-xs uppercase tracking-[0.2em] text-neutral-500">Reason for {isReturn ? "Return" : isExchange ? "Exchange" : isRefund ? "Refund" : "Cancellation"} *</label>
           <div className="space-y-2">
             {reasons.map(r => (
               <label key={r} className="flex items-center gap-3 cursor-pointer p-3 border border-neutral-200 hover:border-black transition">

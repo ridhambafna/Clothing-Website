@@ -16,11 +16,22 @@ const cormorant = Cormorant_Garamond({
 });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit", display: "swap" });
 
-export const metadata: Metadata = {
-  title: brandConfig.seo.title,
-  description: brandConfig.seo.description,
-  keywords: brandConfig.seo.keywords,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  let favicon = brandConfig.favicon || brandConfig.logo;
+  try {
+    const r = await fetch("http://localhost:3000/api/settings", { cache: "no-store" });
+    if (r.ok) {
+      const data = await r.json();
+      if (data.logo) favicon = data.logo;
+    }
+  } catch {}
+  return {
+    title: brandConfig.seo.title,
+    description: brandConfig.seo.description,
+    keywords: brandConfig.seo.keywords,
+    icons: { icon: favicon },
+  };
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const { theme } = brandConfig;

@@ -29,6 +29,7 @@ const ProductSchema = new Schema(
     careInstructions: String,
     sku: String,
     sizes: [String],
+    colors: [String],
     tags: [{ type: String, enum: ["NEW", "BESTSELLER", "SALE"] }],
     stock: { type: Number, default: 10 },
     inStock: { type: Boolean, default: true },
@@ -100,6 +101,8 @@ const OfferSchema = new Schema(
     title: String,
     description: String,
     image: String,
+    discountPercentage: Number,
+    productIds: [String],
     linkType: { type: String, enum: ["product", "collection", "url"], default: "collection" },
     linkValue: String,
     showOnBar: { type: Boolean, default: false },
@@ -139,7 +142,7 @@ const FooterPageSchema = new Schema(
 
 const InquirySchema = new Schema(
   {
-    type: { type: String, enum: ["custom_fit", "general"], default: "custom_fit" },
+    type: { type: String, enum: ["custom_fit", "general", "cancellation_request", "return_request", "refund_request", "exchange_request"], default: "custom_fit" },
     name: String,
     email: String,
     phone: String,

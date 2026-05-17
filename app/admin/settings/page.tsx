@@ -18,6 +18,8 @@ const FIELDS = [
   { key: "facebook", label: "Facebook URL" },
   { key: "youtube", label: "YouTube URL" },
   { key: "pinterest", label: "Pinterest URL" },
+  { key: "filterSizes", label: "Filter Options: Sizes (comma separated)" },
+  { key: "filterColors", label: "Filter Options: Colors (comma separated)" },
 ];
 
 export default function SettingsPage() {
@@ -41,6 +43,8 @@ export default function SettingsPage() {
         facebook: data.facebook ?? "",
         youtube: data.youtube ?? "",
         pinterest: data.pinterest ?? "",
+        filterSizes: data.filterSizes ?? "XS,S,M,L,XL,XXL",
+        filterColors: data.filterColors ?? "Red,Blue,Black,White",
       });
     }).finally(() => setLoading(false));
   }, []);

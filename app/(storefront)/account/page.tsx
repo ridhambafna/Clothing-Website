@@ -263,12 +263,18 @@ function Orders({ orders }: { orders: any[] }) {
                 <div>
                   <p className="font-mono text-xs">#{o._id.slice(-8).toUpperCase()}</p>
                   <p className="text-sm mt-1">{o.items?.length || 0} items · ₹{o.total?.toLocaleString("en-IN")}</p>
-                  <div className="mt-3 flex gap-3">
+                  <div className="mt-3 flex flex-wrap gap-3 items-center">
                     {isPending && (
                       <Link href={`/account/requests?orderId=${o._id}&type=cancel`} className="text-[10px] uppercase tracking-[0.2em] border border-[#8C001A] text-[#8C001A] px-3 py-1 hover:bg-[#8C001A] hover:text-white transition">Cancel Order</Link>
                     )}
                     {isDelivered && (
-                      <Link href={`/account/requests?orderId=${o._id}&type=return`} className="text-[10px] uppercase tracking-[0.2em] border border-black text-black px-3 py-1 hover:bg-black hover:text-white transition">Return Order</Link>
+                      <>
+                        <Link href={`/account/requests?orderId=${o._id}&type=return`} className="text-[10px] uppercase tracking-[0.2em] border border-black text-black px-3 py-1 hover:bg-black hover:text-white transition">Return Order</Link>
+                        <Link href={`/account/requests?orderId=${o._id}&type=exchange`} className="text-[10px] uppercase tracking-[0.2em] border border-black text-black px-3 py-1 hover:bg-black hover:text-white transition">Exchange Order</Link>
+                      </>
+                    )}
+                    {o.paymentStatus === "refunded" && (
+                      <span className="text-[10px] uppercase tracking-[0.2em] bg-green-50 text-green-700 px-3 py-1 border border-green-200">Refunded</span>
                     )}
                   </div>
                 </div>

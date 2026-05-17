@@ -35,7 +35,7 @@ export default function Storytelling() {
           style={{ color: "var(--color-text-muted)" }}
         >
           Every fabric we offer is a conversation between tradition and modernity.
-          Italian-inspired weaves, hand-finished with obsessive precision —
+          Indian-inspired weaves, hand-finished with obsessive precision —
           each metre arrives ready for the wardrobe of a lifetime.
         </p>
         <Link

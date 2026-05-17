@@ -6,9 +6,7 @@ import { getSession } from "@/lib/auth-server";
 export async function GET() {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (session.id === "saas-admin-1") {
-    return NextResponse.json({ id: session.id, name: session.name, email: session.email, phone: "", dob: "", gender: "" });
-  }
+
   const conn = await connectDB();
   if (!conn) return NextResponse.json({ error: "Database not configured" }, { status: 503 });
   const user = await User.findById(session.id).select("-password").lean() as any;
@@ -26,7 +24,7 @@ export async function GET() {
 export async function PUT(req: NextRequest) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (session.id === "saas-admin-1") return NextResponse.json({ error: "Cannot edit master admin profile" }, { status: 400 });
+
 
   const conn = await connectDB();
   if (!conn) return NextResponse.json({ error: "Database not configured" }, { status: 503 });

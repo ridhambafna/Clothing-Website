@@ -144,10 +144,13 @@ export default function Footer() {
           </div>
         )}
 
-        <div className="border-t border-white/15 pt-8 flex flex-col items-center gap-2 md:flex-row md:justify-between">
-          <p className="text-xs uppercase tracking-[0.2em] text-white/50">
-            © {new Date().getFullYear()} {settings?.name || brandConfig.name}. All rights reserved.
-          </p>
+        <div className="border-t border-white/15 pt-8 flex flex-col items-center gap-4 md:flex-row md:justify-between">
+          <div className="flex items-center gap-4">
+            <img src={settings?.logo || brandConfig.logo} alt={settings?.name || brandConfig.name} className="h-8 w-auto invert opacity-70" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+            <p className="text-xs uppercase tracking-[0.2em] text-white/50">
+              © {new Date().getFullYear()} {settings?.name || brandConfig.name}. All rights reserved.
+            </p>
+          </div>
           <p className="text-xs uppercase tracking-[0.2em] text-[#C5A572]">
             {settings?.tagline || brandConfig.tagline}
           </p>

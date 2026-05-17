@@ -20,8 +20,21 @@ export default function CollectionPage({ params }: Props) {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [collection, setCollection] = useState<{ name: string; productIds?: string[]; description?: string } | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const [filterOpts, setFilterOpts] = useState<{ sizes: string[]; colors: string[] }>({ sizes: [], colors: [] });
 
   useEffect(() => { fetchProducts().then(setAllProducts); }, []);
+
+  useEffect(() => {
+    fetch("/api/settings", { cache: "no-store" })
+      .then(r => r.ok ? r.json() : {})
+      .then(data => {
+        setFilterOpts({
+          sizes: (data.filterSizes || "XS,S,M,L,XL,XXL").split(",").map((s: string) => s.trim()).filter(Boolean),
+          colors: (data.filterColors || "Red,Blue,Black,White").split(",").map((s: string) => s.trim()).filter(Boolean),
+        });
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     fetch("/api/collections", { cache: "no-store" })
@@ -51,8 +64,8 @@ export default function CollectionPage({ params }: Props) {
 
   const filtered = useMemo(() => {
     let items = [...collectionProducts];
-    if (filters.metals.length) items = items.filter((p) => filters.metals.includes(p.metal));
-    if (filters.stones.length) items = items.filter((p) => filters.stones.includes(p.stone));
+    if (filters.sizes.length) items = items.filter((p) => p.sizes?.some(s => filters.sizes.includes(s)));
+    if (filters.colors.length) items = items.filter((p) => (p as any).colors?.some((c: string) => filters.colors.includes(c)));
     if (filters.collections.length) items = items.filter((p) => p.collection && filters.collections.includes(p.collection));
     if (filters.inStockOnly) items = items.filter((p) => p.inStock);
     items = items.filter((p) => p.price >= filters.priceMin && p.price <= filters.priceMax);
@@ -86,7 +99,10 @@ export default function CollectionPage({ params }: Props) {
       ) : (
         <>
           {flags.filterAndSort ? (
-            <FilterSortBar total={filtered.length} filters={filters} setFilters={setFilters} sort={sort} setSort={setSort} />
+            <FilterSortBar 
+              total={filtered.length} filters={filters} setFilters={setFilters} sort={sort} setSort={setSort} 
+              availableSizes={filterOpts.sizes} availableColors={filterOpts.colors}
+            />
           ) : (
             <div className="mb-12 border-b border-[#E8E2D5] pb-5">
               <p className="text-sm uppercase tracking-[0.2em] text-[#777]">{filtered.length} Items</p>

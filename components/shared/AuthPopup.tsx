@@ -16,9 +16,9 @@ export default function AuthPopup() {
   const [name, setName] = useState("");
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [forgotMessage, setForgotMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -30,7 +30,7 @@ export default function AuthPopup() {
 
   useEffect(() => {
     if (!authPopupOpen) {
-      setTab("login"); setError(""); setOtpSent(false); setOtp(""); setConfirmationResult(null); setShowPassword(false);
+      setTab("login"); setError(""); setForgotMessage(""); setOtpSent(false); setOtp(""); setConfirmationResult(null); setShowPassword(false);
     }
   }, [authPopupOpen]);
 
@@ -100,7 +100,7 @@ export default function AuthPopup() {
         } else {
           setLoading(true);
           setTimeout(() => {
-            alert("Password reset link sent to your email!");
+            setForgotMessage("Password reset link sent to your email!");
             setTab("login");
             setLoading(false);
           }, 1000);
@@ -110,11 +110,7 @@ export default function AuthPopup() {
     }
 
     if (tab === "signup") {
-      if (password !== confirmPassword) {
-        setError("Passwords do not match");
-        return;
-      }
-      if (strength < 4) {
+      if (strength < 3) {
         setError("Password is not strong enough");
         return;
       }
@@ -153,13 +149,13 @@ export default function AuthPopup() {
         setError(r.error || "Something went wrong");
         return;
       }
-      if (tab === "login" && r.role === "admin") {
+      if (tab === "login" && (r as any).role === "admin") {
         await logout();
         setError("Invalid credentials");
         return;
       }
       closeAuthPopup();
-      setName(""); setEmailOrPhone(""); setPassword(""); setConfirmPassword("");
+      setName(""); setEmailOrPhone(""); setPassword("");
       router.push("/account");
     } catch (e: any) {
       setError(e.message || "An error occurred");
@@ -182,7 +178,7 @@ export default function AuthPopup() {
         </div>
         <div className="mb-8 flex border-b border-neutral-200">
           {(["login", "signup"] as const).map((t) => (
-            <button key={t} onClick={() => { setTab(t); setError(""); setOtpSent(false); }}
+            <button key={t} type="button" onClick={() => { setTab(t); setError(""); setForgotMessage(""); setOtpSent(false); }}
               className={`flex-1 pb-3 text-xs uppercase tracking-[0.25em] -mb-px ${tab === t ? "text-black border-b border-black" : "text-neutral-500"}`}>
               {t === "login" ? "Sign In" : "Sign Up"}
             </button>
@@ -230,11 +226,6 @@ export default function AuthPopup() {
                       ))}
                     </div>
                     {password && <p className="text-xs text-neutral-500 mt-1">{strengthLabels[strength]} (Use 8+ chars, upper, number, special)</p>}
-                    
-                    <div className="relative mt-5">
-                      <input type={showPassword ? "text" : "password"} placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required
-                        className={`w-full border-b py-3 text-sm font-light tracking-wide focus:outline-none bg-transparent pr-10 ${confirmPassword && password !== confirmPassword ? "border-red-500 focus:border-red-500" : "border-neutral-300 focus:border-black"}`} />
-                    </div>
                   </>
                 )}
               </>
@@ -242,6 +233,7 @@ export default function AuthPopup() {
           )}
 
           {error && <p className="text-sm text-[#8C001A] tracking-wide">{error}</p>}
+          {forgotMessage && <p className="text-sm text-green-600 tracking-wide">{forgotMessage}</p>}
           
           <button type="submit" disabled={loading}
             className="w-full bg-black text-white py-4 text-sm uppercase tracking-[0.2em] hover:bg-neutral-800 transition flex items-center justify-center gap-2 disabled:opacity-60">
@@ -251,7 +243,7 @@ export default function AuthPopup() {
 
           {tab === "login" && !otpSent && (
             <div className="text-center mt-4">
-              <button type="button" onClick={() => { setTab("forgot"); setError(""); }} className="text-xs text-neutral-500 underline hover:text-black">
+              <button type="button" onClick={() => { setTab("forgot"); setError(""); setForgotMessage(""); }} className="text-xs text-neutral-500 underline hover:text-black">
                 Forgot password?
               </button>
             </div>

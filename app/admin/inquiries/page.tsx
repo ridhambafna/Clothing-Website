@@ -26,6 +26,11 @@ export default function InquiriesPage() {
   useEffect(() => { load(); }, []);
 
   async function update(id: string, patch: any) {
+    if (patch.status === "resolved") {
+      const notes = prompt("Enter resolution notes for the customer:");
+      if (notes === null) return; // Cancelled
+      patch.resolutionNotes = notes;
+    }
     await fetch(`/api/inquiries/${id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(patch) });
     await load();
   }

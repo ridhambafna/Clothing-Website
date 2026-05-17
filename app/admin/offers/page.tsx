@@ -23,6 +23,8 @@ export default function OffersPage() {
           { key: "title", label: "Title", required: true, placeholder: "e.g. Festive Edit" },
           { key: "image", label: "Image (optional)", type: "image" },
           { key: "description", label: "Description", type: "textarea", placeholder: "15% off your first order" },
+          { key: "discountPercentage", label: "Discount %", type: "number", placeholder: "e.g. 15" },
+          { key: "productIds", label: "Product IDs (comma separated)", placeholder: "Optional: Apply only to specific products" },
           {
             key: "linkType", label: "Link Type", type: "select", options: [
               { value: "collection", label: "Collection" },

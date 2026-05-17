@@ -29,6 +29,7 @@ export default function Header() {
   const [navLinks, setNavLinks] = useState<NavLink[]>(FALLBACK_NAV);
   const [products, setProducts] = useState<Product[]>([]);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [settings, setSettings] = useState<any>({});
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -36,6 +37,11 @@ export default function Header() {
     fetch("/api/navbar", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : []))
       .then((data: NavLink[]) => { if (Array.isArray(data) && data.length > 0) setNavLinks(data); })
+      .catch(() => { });
+    
+    fetch("/api/settings", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : {}))
+      .then(setSettings)
       .catch(() => { });
   }, []);
 
@@ -67,10 +73,10 @@ export default function Header() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-4">
           {/* LEFT: Logo */}
           <Link href="/" className="flex items-center gap-3">
-            <img src={brandConfig.logo} alt={brandConfig.name}
-              className="h-10 w-auto" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
-            <span className="font-heading text-xl tracking-[0.25em] text-[#0F0F0F] hidden sm:inline">
-              {brandConfig.name}
+            <img src={settings?.logo || brandConfig.logo} alt={settings?.name || brandConfig.name}
+              className="h-8 md:h-10 w-auto" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+            <span className="font-heading text-lg md:text-xl tracking-[0.25em] text-[#0F0F0F] hidden sm:inline">
+              {settings?.name || brandConfig.name}
             </span>
           </Link>
 

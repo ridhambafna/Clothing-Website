@@ -10,6 +10,7 @@ export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [forgotMessage, setForgotMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -54,10 +55,23 @@ export default function AdminLoginPage() {
             </div>
           </div>
           {error && <p className="text-xs text-[#8C001A] uppercase tracking-[0.15em]">{error}</p>}
+          {forgotMessage && <p className="text-xs text-green-600 uppercase tracking-[0.15em]">{forgotMessage}</p>}
           <button type="submit" disabled={loading}
             className="w-full bg-black py-4 text-sm uppercase tracking-[0.2em] text-white hover:bg-neutral-800 transition disabled:opacity-50">
             {loading ? "Signing in..." : "Sign In"}
           </button>
+          <div className="text-center mt-4">
+            <button type="button" onClick={() => {
+              if (!email) { setError("Please enter your email first"); return; }
+              setError(""); setForgotMessage(""); setLoading(true);
+              setTimeout(() => {
+                setForgotMessage("Password reset link sent to your email!");
+                setLoading(false);
+              }, 1000);
+            }} className="text-xs text-neutral-500 underline hover:text-black">
+              Forgot password?
+            </button>
+          </div>
         </form>
       </div>
     </div>

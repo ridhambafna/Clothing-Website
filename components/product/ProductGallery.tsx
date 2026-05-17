@@ -10,22 +10,32 @@ export default function ProductGallery({ images, name }: { images: string[]; nam
   const [idx, setIdx] = useState(0);
   const [lbOpen, setLbOpen] = useState(false);
 
-  const safe = images && images.length > 0 ? images : [""];
+  // Filter out empty / falsy strings so we never pass "" to an <img> src
+  const valid = (images || []).filter((s) => typeof s === "string" && s.trim() !== "");
+  const hasImages = valid.length > 0;
 
-  const prev = () => setIdx((i) => (i - 1 + safe.length) % safe.length);
-  const next = () => setIdx((i) => (i + 1) % safe.length);
+  const prev = () => setIdx((i) => (i - 1 + valid.length) % valid.length);
+  const next = () => setIdx((i) => (i + 1) % valid.length);
 
   return (
     <div>
       <div
         className="relative aspect-[4/5] overflow-hidden mb-4 group cursor-zoom-in"
-        onClick={() => setLbOpen(true)}
+        onClick={() => hasImages && setLbOpen(true)}
       >
-        <img src={safe[idx]} alt={name} className="w-full h-full object-cover" />
-        <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm p-2 opacity-0 group-hover:opacity-100 transition">
-          <ZoomIn className="w-5 h-5 stroke-[1.5]" />
-        </div>
-        {flags.arrowNavigation && safe.length > 1 && (
+        {hasImages ? (
+          <img src={valid[idx]} alt={name} className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full bg-neutral-100 flex items-center justify-center">
+            <span className="text-neutral-400 text-sm uppercase tracking-[0.2em]">No Image</span>
+          </div>
+        )}
+        {hasImages && (
+          <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm p-2 opacity-0 group-hover:opacity-100 transition">
+            <ZoomIn className="w-5 h-5 stroke-[1.5]" />
+          </div>
+        )}
+        {flags.arrowNavigation && valid.length > 1 && (
           <>
             <button onClick={(e) => { e.stopPropagation(); prev(); }}
               className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm p-3 hover:bg-white transition"
@@ -40,15 +50,19 @@ export default function ProductGallery({ images, name }: { images: string[]; nam
           </>
         )}
       </div>
-      <div className="flex gap-3">
-        {safe.map((img, i) => (
-          <button key={i} onClick={() => setIdx(i)}
-            className={`aspect-square w-20 overflow-hidden flex-shrink-0 ${idx === i ? "ring-1 ring-black ring-offset-2" : ""}`}>
-            <img src={img} alt={`View ${i + 1}`} className="h-full w-full object-cover" />
-          </button>
-        ))}
-      </div>
-      <Lightbox open={lbOpen} images={safe} index={idx} onClose={() => setLbOpen(false)} onIndexChange={setIdx} />
+      {hasImages && (
+        <div className="flex gap-3">
+          {valid.map((img, i) => (
+            <button key={i} onClick={() => setIdx(i)}
+              className={`aspect-square w-20 overflow-hidden flex-shrink-0 ${idx === i ? "ring-1 ring-black ring-offset-2" : ""}`}>
+              <img src={img} alt={`View ${i + 1}`} className="h-full w-full object-cover" />
+            </button>
+          ))}
+        </div>
+      )}
+      {hasImages && (
+        <Lightbox open={lbOpen} images={valid} index={idx} onClose={() => setLbOpen(false)} onIndexChange={setIdx} />
+      )}
     </div>
   );
 }

@@ -123,7 +123,7 @@ export default function CrudTable({ resource, fields, columns, defaultValues = {
             {resource === "products" && form.salePrice > 0 && form.price > 0 && (
               <div className="mt-8 border border-[#C5A572] bg-[#F8F6F2] p-6">
                 <p className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 mb-4">Offer Preview (Storefront)</p>
-                <div className="w-64 bg-white border border-[#E8E2D5] p-4 shadow-sm">
+                <div className="relative w-64 bg-white border border-[#E8E2D5] p-4 shadow-sm">
                   {form.image ? (
                     <img src={form.image} alt="Preview" className="w-full aspect-[4/5] object-cover mb-3" />
                   ) : (
@@ -133,8 +133,11 @@ export default function CrudTable({ resource, fields, columns, defaultValues = {
                   <div className="flex items-center gap-2">
                     <p className="text-sm text-[#222]">₹{Number(form.salePrice).toLocaleString("en-IN")}</p>
                     <p className="text-xs text-[#777] line-through">₹{Number(form.price).toLocaleString("en-IN")}</p>
+                    <span className="text-[10px] text-[#8B1A1A] font-medium ml-auto uppercase tracking-[0.1em]">
+                      {Math.round(((form.price - form.salePrice) / form.price) * 100)}% OFF
+                    </span>
                   </div>
-                  <span className="absolute top-8 left-8 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] rounded-full bg-[#8B1A1A] text-white">SALE</span>
+                  <span className="absolute top-6 left-6 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] rounded-full bg-[#8B1A1A] text-white">SALE</span>
                 </div>
               </div>
             )}

@@ -146,25 +146,39 @@ export default function ProductPage({ params }: Props) {
 
 
 
-          {/* Available sizes */ }
+          {/* Available sizes */}
           <div className="mb-6">
             <p className="mb-3 text-xs uppercase tracking-[0.2em] text-[#777]">Select Size</p>
-            <div className="flex flex-wrap gap-2">
-              {((Array.isArray((product as any).sizes) && (product as any).sizes.length > 0)
-                ? (product as any).sizes
-                : (brandConfig.type === "jewellery" ? ["6", "7", "8", "9", "10"] : ["XS", "S", "M", "L", "XL", "XXL"])
-              ).map((s: string) => (
-                <button key={s} onClick={() => setSelectedSize(s)}
-                  className={`px-3 h-9 inline-flex items-center justify-center text-xs uppercase tracking-[0.15em] border transition ${selectedSize === s ? "bg-black text-white border-black" : "border-[#E8E2D5] text-[#222] hover:border-black"}`}>
-                  {s}
+            {selectedSize === "Custom Fit" ? (
+              <div className="mb-4">
+                <button onClick={() => setSelectedSize(null)}
+                  className="px-4 h-10 inline-flex items-center justify-center text-xs uppercase tracking-[0.15em] bg-[#C5A572] text-white border border-[#C5A572]">
+                  Custom Fit Selected ✕
                 </button>
-              ))}
-              <button onClick={() => setSelectedSize("Custom Fit")}
-                className={`px-3 h-9 inline-flex items-center justify-center text-xs uppercase tracking-[0.15em] border transition ${selectedSize === "Custom Fit" ? "bg-[#C5A572] text-white border-[#C5A572]" : "border-[#C5A572] text-[#C5A572] hover:bg-[#C5A572] hover:text-white"}`}>
-                Custom Fit
-              </button>
-            </div>
-            <p className="text-xs text-[#777] mt-2 font-light">Select your size or choose Custom Fit for tailored measurements.</p>
+                <p className="text-sm text-[#C5A572] mt-3 font-light">
+                  Our studio will get in touch to take your measurements for a perfect fit.
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="flex flex-wrap gap-2">
+                  {((Array.isArray((product as any).sizes) && (product as any).sizes.length > 0)
+                    ? (product as any).sizes
+                    : (brandConfig.type === "jewellery" ? ["6", "7", "8", "9", "10"] : ["XS", "S", "M", "L", "XL", "XXL"])
+                  ).map((s: string) => (
+                    <button key={s} onClick={() => setSelectedSize(s)}
+                      className={`px-3 h-9 inline-flex items-center justify-center text-xs uppercase tracking-[0.15em] border transition ${selectedSize === s ? "bg-black text-white border-black" : "border-[#E8E2D5] text-[#222] hover:border-black"}`}>
+                      {s}
+                    </button>
+                  ))}
+                  <button onClick={() => setSelectedSize("Custom Fit")}
+                    className="px-3 h-9 inline-flex items-center justify-center text-xs uppercase tracking-[0.15em] border transition border-[#C5A572] text-[#C5A572] hover:bg-[#C5A572] hover:text-white">
+                    Custom Fit
+                  </button>
+                </div>
+                <p className="text-xs text-[#777] mt-2 font-light">Select your size or choose Custom Fit for tailored measurements.</p>
+              </>
+            )}
           </div>
 
           {feedback && (
