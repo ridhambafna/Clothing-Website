@@ -32,6 +32,21 @@ function CheckoutInner() {
   const searchParams = useSearchParams();
   const isBuyNow = searchParams.get("mode") === "buynow";
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const savedUser = sessionStorage.getItem("lux-user");
+    if (!user && !savedUser) {
+      const redirect = encodeURIComponent(window.location.pathname + window.location.search);
+      router.replace(`/login?redirect=${redirect}`);
+    }
+  }, [user, mounted, router]);
+
   const [buyNowItem, setBuyNowItem] = useState<BuyNowItem | null>(null);
   useEffect(() => {
     if (!isBuyNow) return;
@@ -41,6 +56,15 @@ function CheckoutInner() {
       else router.replace("/cart");
     } catch { router.replace("/cart"); }
   }, [isBuyNow, router]);
+
+  if (!mounted || !user) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
+        <Loader2 className="w-8 h-8 animate-spin text-[#C5A572] stroke-[1.5]" />
+        <p className="text-xs uppercase tracking-[0.2em] text-neutral-400 font-light">Verifying Bespoke Credentials...</p>
+      </div>
+    );
+  }
 
   // Effective items + subtotal: either single Buy-Now item or full cart.
   const effectiveItems = isBuyNow && buyNowItem ? [{ id: "buynow", ...buyNowItem }] : cart;

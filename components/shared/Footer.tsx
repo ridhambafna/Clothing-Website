@@ -55,6 +55,13 @@ const LEGAL = [
   { flag: "fl_accessibility", label: "Accessibility", href: "/p/accessibility" },
 ] as const;
 
+const desktopGridCols: Record<number, string> = {
+  1: "md:grid-cols-1",
+  2: "md:grid-cols-2",
+  3: "md:grid-cols-3",
+  4: "md:grid-cols-4",
+};
+
 export default function Footer() {
   const { flags } = useApp();
   const [settings, setSettings] = useState<any>({});
@@ -91,7 +98,7 @@ export default function Footer() {
     <footer className="mt-24 bg-[#0F0F0F] text-white pt-16 pb-10">
       <div className="mx-auto max-w-7xl px-8">
         {visibleColumns > 0 && (
-          <div className={`grid grid-cols-2 gap-12 md:grid-cols-${Math.max(visibleColumns, 1)} mb-16`}>
+          <div className={`grid grid-cols-2 gap-12 ${desktopGridCols[Math.max(visibleColumns, 1)] || "md:grid-cols-4"} mb-16`}>
             {flags.footerCustomerCare && (
               <Column title="Customer Care">
                 {CUSTOMER_CARE.filter((l) => flags[l.flag as keyof typeof flags]).map((l) => (

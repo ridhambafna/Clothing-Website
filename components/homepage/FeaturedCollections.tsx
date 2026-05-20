@@ -10,6 +10,7 @@ interface Col { name: string; slug: string; image?: string; }
 export default function FeaturedCollections() {
   const { flags } = useApp();
   const [collections, setCollections] = useState<Col[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   const LEGACY_SLUGS = new Set(["rings", "necklaces", "earrings", "bangles", "anklets", "bracelets", "pendants", "chains", "studs", "hoops"]);
 
@@ -20,11 +21,12 @@ export default function FeaturedCollections() {
         const onHome = data.filter((c) => c.showOnHome !== false && !LEGACY_SLUGS.has(c.slug));
         if (onHome.length > 0) setCollections(onHome.map((c) => ({ name: c.name, slug: c.slug, image: c.image })));
       })
-      .catch(() => { });
+      .catch(() => { })
+      .finally(() => setLoaded(true));
   }, []);
 
   if (!flags.featuredCollections) return null;
-  if (collections.length === 0) return null;
+  if (!loaded && collections.length === 0) return <section style={{ minHeight: "520px" }} />;
 
   return (
     <section className="mx-auto max-w-7xl px-8 py-28">

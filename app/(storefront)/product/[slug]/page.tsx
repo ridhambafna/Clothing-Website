@@ -36,7 +36,7 @@ export default function ProductPage({ params }: Props) {
     }).catch(() => setLoading(false));
   }, [slug]);
   const { addToCart, toggleWishlist, wishlist } = useCart();
-  const { flags } = useApp();
+  const { flags, user } = useApp();
 
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [sizePopup, setSizePopup] = useState<SizeAction | null>(null);
@@ -71,7 +71,11 @@ export default function ProductPage({ params }: Props) {
           quantity: 1,
         }));
       } catch { }
-      router.push("/checkout?mode=buynow");
+      if (!user) {
+        router.push(`/login?redirect=${encodeURIComponent("/checkout?mode=buynow")}`);
+      } else {
+        router.push("/checkout?mode=buynow");
+      }
     } else if (action === "wishlist") {
       toggleWishlist(product._id);
       setFeedback(isWishlisted ? "Removed from Wishlist" : "Added to Wishlist ♥");

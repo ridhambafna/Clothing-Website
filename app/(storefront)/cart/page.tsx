@@ -1,11 +1,24 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { useApp } from "@/contexts/AppContext";
 
 export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, totalPrice } = useCart();
+  const { user } = useApp();
+  const router = useRouter();
+
+  function handleCheckout(e: React.MouseEvent) {
+    e.preventDefault();
+    if (!user) {
+      router.push("/login?redirect=/checkout");
+    } else {
+      router.push("/checkout");
+    }
+  }
 
   if (cart.length === 0) {
     return (
@@ -199,13 +212,13 @@ export default function CartPage() {
             </div>
           </div>
 
-          <Link
-            href="/checkout"
-            className="block w-full py-4 text-center text-sm uppercase tracking-[0.2em] text-white transition-opacity duration-200 hover:opacity-80"
+          <button
+            onClick={handleCheckout}
+            className="block w-full py-4 text-center text-sm uppercase tracking-[0.2em] text-white transition-opacity duration-200 hover:opacity-80 cursor-pointer"
             style={{ backgroundColor: "var(--color-text)" }}
           >
             Proceed to Checkout
-          </Link>
+          </button>
 
           <p
             className="mt-4 text-center text-xs font-light tracking-wide"

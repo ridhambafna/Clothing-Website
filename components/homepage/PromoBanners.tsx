@@ -17,9 +17,15 @@ export default function PromoBanners() {
 
   if (items.length === 0) return null;
 
+  const gridClass = items.length === 1 
+    ? "grid-cols-1" 
+    : items.length === 2 
+      ? "grid-cols-1 md:grid-cols-2" 
+      : "grid-cols-1 md:grid-cols-3";
+
   return (
     <section className="py-16 px-8">
-      <div className="max-w-7xl mx-auto grid gap-6" style={{ gridTemplateColumns: `repeat(${Math.min(items.length, 3)}, minmax(0, 1fr))` }}>
+      <div className={`max-w-7xl mx-auto grid gap-6 ${gridClass}`}>
         {items.slice(0, 6).map((b) => {
           const Wrap: any = b.link ? Link : "div";
           const wrapProps = b.link ? { href: b.link } : {};

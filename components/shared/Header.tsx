@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, User, Heart, ShoppingBag, X, ChevronDown } from "lucide-react";
+import { Search, User, Heart, ShoppingBag, X, ChevronDown, Menu } from "lucide-react";
 import { brandConfig } from "@/brand.config";
 import { useCart } from "@/contexts/CartContext";
 import { useApp } from "@/contexts/AppContext";
@@ -25,6 +25,8 @@ export default function Header() {
   const { cartCount, wishlist } = useCart();
   const { user, openAuthPopup, flags } = useApp();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileCollectionsOpen, setMobileCollectionsOpen] = useState(false);
   const [q, setQ] = useState("");
   const [navLinks, setNavLinks] = useState<NavLink[]>(FALLBACK_NAV);
   const [products, setProducts] = useState<Product[]>([]);
@@ -70,12 +72,12 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-[#E8E2D5] bg-white/95 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 md:px-8 py-4">
           {/* LEFT: Logo */}
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3">
             <img src={settings?.logo || brandConfig.logo} alt={settings?.name || brandConfig.name}
               className="h-8 md:h-10 w-auto" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
-            <span className="font-heading text-lg md:text-xl tracking-[0.25em] text-[#0F0F0F] hidden sm:inline">
+            <span className="font-heading text-base sm:text-lg md:text-xl tracking-[0.15em] sm:tracking-[0.25em] text-[#0F0F0F] inline-block">
               {settings?.name || brandConfig.name}
             </span>
           </Link>
@@ -86,7 +88,7 @@ export default function Header() {
               <div key={l.label} className="relative"
                 onMouseEnter={() => l.children?.length && setOpenDropdown(l.label)}
                 onMouseLeave={() => setOpenDropdown(null)}>
-                <Link href={l.href} className="group relative inline-flex items-center gap-1 text-xs uppercase tracking-[0.25em] text-[#222222] hover:text-[#C5A572] transition">
+                <Link href={l.href} className="group relative inline-flex items-center gap-1 text-xs uppercase tracking-[0.25em] text-[#222] hover:text-[#C5A572] transition">
                   {l.label}
                   {l.children?.length ? <ChevronDown className="w-3 h-3" /> : null}
                   <span className="absolute -bottom-1.5 left-0 h-px w-0 bg-[#C5A572] transition-all duration-300 group-hover:w-full" />
@@ -105,15 +107,15 @@ export default function Header() {
           </nav>
 
           {/* RIGHT: Icons */}
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-4 sm:gap-5">
             <button onClick={() => setSearchOpen(true)} aria-label="Search" className="text-[#222] hover:text-[#C5A572] transition">
               <Search className="w-5 h-5 stroke-[1.5]" />
             </button>
-            <button onClick={onAccount} aria-label="Account" className="text-[#222] hover:text-[#C5A572] transition">
+            <button onClick={onAccount} aria-label="Account" className="hidden md:block text-[#222] hover:text-[#C5A572] transition">
               <User className="w-5 h-5 stroke-[1.5]" />
             </button>
             {flags.wishlist && (
-              <Link href="/wishlist" aria-label="Wishlist" className="relative text-[#222] hover:text-[#C5A572] transition">
+              <Link href="/wishlist" aria-label="Wishlist" className="hidden md:block relative text-[#222] hover:text-[#C5A572] transition">
                 <Heart className="w-5 h-5 stroke-[1.5]" />
                 {wishlist.length > 0 && (
                   <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-[#C5A572] text-[9px] font-medium text-white">
@@ -130,9 +132,78 @@ export default function Header() {
                 </span>
               )}
             </Link>
+            <button onClick={() => setMenuOpen(true)} aria-label="Menu" className="md:hidden text-[#222] hover:text-[#C5A572] transition">
+              <Menu className="w-5 h-5 stroke-[1.5]" />
+            </button>
           </div>
         </div>
       </header>
+
+      {/* MOBILE NAVIGATION DRAWER */}
+      <div className={`fixed inset-0 z-[100] transition-opacity duration-300 ${menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} onClick={() => setMenuOpen(false)}>
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
+        <div className={`absolute right-0 top-0 h-full w-full max-w-[320px] bg-white shadow-2xl p-6 flex flex-col transition-transform duration-300 ease-out transform ${menuOpen ? "translate-x-0" : "translate-x-full"}`} onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center justify-between border-b border-[#E8E2D5] pb-5 mb-6">
+            <Link href="/" onClick={() => setMenuOpen(false)} className="flex items-center gap-2">
+              <img src={settings?.logo || brandConfig.logo} alt={settings?.name || brandConfig.name} className="h-6 w-auto" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+              <span className="font-heading text-base tracking-[0.2em] text-[#0F0F0F]">{settings?.name || brandConfig.name}</span>
+            </Link>
+            <button onClick={() => setMenuOpen(false)} aria-label="Close menu" className="text-[#777] hover:text-black">
+              <X className="w-5 h-5 stroke-[1.5]" />
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto space-y-5">
+            <Link href="/" onClick={() => setMenuOpen(false)} className="block text-xs uppercase tracking-[0.25em] text-[#222] hover:text-[#C5A572] py-2 transition border-b border-[#F0EBDF]">
+              Home
+            </Link>
+
+            <div>
+              <button onClick={() => setMobileCollectionsOpen(!mobileCollectionsOpen)} className="w-full flex items-center justify-between text-xs uppercase tracking-[0.25em] text-[#222] hover:text-[#C5A572] py-2 transition border-b border-[#F0EBDF]">
+                <span>Collections</span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${mobileCollectionsOpen ? "rotate-180" : ""}`} />
+              </button>
+              <div className={`pl-3 space-y-3 overflow-hidden transition-all duration-300 ${mobileCollectionsOpen ? "max-h-60 mt-3" : "max-h-0"}`}>
+                <Link href="/collections" onClick={() => setMenuOpen(false)} className="block text-[11px] uppercase tracking-[0.2em] text-[#777] hover:text-[#C5A572] transition">
+                  Shop All Collections
+                </Link>
+                {navLinks.map((l) => (
+                  <Link key={l.label} href={l.href} onClick={() => setMenuOpen(false)} className="block text-[11px] uppercase tracking-[0.2em] text-[#777] hover:text-[#C5A572] transition">
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <Link href="/p/about-us" onClick={() => setMenuOpen(false)} className="block text-xs uppercase tracking-[0.25em] text-[#222] hover:text-[#C5A572] py-2 transition border-b border-[#F0EBDF]">
+              About
+            </Link>
+
+            <Link href="/p/contact-us" onClick={() => setMenuOpen(false)} className="block text-xs uppercase tracking-[0.25em] text-[#222] hover:text-[#C5A572] py-2 transition border-b border-[#F0EBDF]">
+              Contact
+            </Link>
+
+            <Link href="/cart" onClick={() => setMenuOpen(false)} className="flex items-center justify-between text-xs uppercase tracking-[0.25em] text-[#222] hover:text-[#C5A572] py-2 transition border-b border-[#F0EBDF]">
+              <span>Cart</span>
+              {cartCount > 0 ? (
+                <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-[#C5A572] text-[9px] font-medium text-white">
+                  {cartCount}
+                </span>
+              ) : null}
+            </Link>
+
+            <button onClick={(e) => { setMenuOpen(false); onAccount(e); }} className="w-full text-left text-xs uppercase tracking-[0.25em] text-[#222] hover:text-[#C5A572] py-2 transition border-b border-[#F0EBDF]">
+              {user ? "My Account" : "Sign In / Register"}
+            </button>
+          </div>
+
+          <div className="border-t border-[#E8E2D5] pt-5 mt-auto">
+            <p className="text-[9px] uppercase tracking-[0.2em] text-neutral-400 text-center">
+              © {new Date().getFullYear()} {brandConfig.name}
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* INLINE SEARCH OVERLAY — page visible underneath */}
       {searchOpen && (
