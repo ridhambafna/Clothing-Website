@@ -7,28 +7,33 @@ import { brandConfig } from "@/brand.config";
 
 export default function Hero() {
   const { flags } = useApp();
-  const [data, setData] = useState({
-    image: brandConfig.content.hero.image,
-    title: brandConfig.content.hero.title,
-    subtitle: brandConfig.content.hero.subtitle,
-    cta: brandConfig.content.hero.cta,
-  });
+  const [data, setData] = useState<{
+    image: string; title: string; subtitle: string; cta: string;
+  } | null>(null);
 
   useEffect(() => {
     fetch("/api/banners", { cache: "no-store" })
       .then((r) => r.ok ? r.json() : {})
       .then((d: any) => {
-        setData((prev) => ({
-          image: d.heroImage || prev.image,
-          title: d.heroTitle || prev.title,
-          subtitle: d.heroSubtitle || prev.subtitle,
-          cta: d.heroCta || prev.cta,
-        }));
+        setData({
+          image: d.heroImage || brandConfig.content.hero.image,
+          title: d.heroTitle || brandConfig.content.hero.title,
+          subtitle: d.heroSubtitle || brandConfig.content.hero.subtitle,
+          cta: d.heroCta || brandConfig.content.hero.cta,
+        });
       })
-      .catch(() => { });
+      .catch(() => {
+        setData({
+          image: brandConfig.content.hero.image,
+          title: brandConfig.content.hero.title,
+          subtitle: brandConfig.content.hero.subtitle,
+          cta: brandConfig.content.hero.cta,
+        });
+      });
   }, []);
 
   if (!flags.heroBanner) return null;
+  if (!data) return null;
 
   return (
     <section className="relative overflow-hidden bg-[#F8F6F2]" style={{ height: "88vh" }}>

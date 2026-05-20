@@ -9,7 +9,7 @@ interface Col { name: string; slug: string; image?: string; }
 
 export default function FeaturedCollections() {
   const { flags } = useApp();
-  const [collections, setCollections] = useState<Col[]>(brandConfig.content.collections);
+  const [collections, setCollections] = useState<Col[]>([]);
 
   const LEGACY_SLUGS = new Set(["rings", "necklaces", "earrings", "bangles", "anklets", "bracelets", "pendants", "chains", "studs", "hoops"]);
 
@@ -24,6 +24,7 @@ export default function FeaturedCollections() {
   }, []);
 
   if (!flags.featuredCollections) return null;
+  if (collections.length === 0) return null;
 
   return (
     <section className="mx-auto max-w-7xl px-8 py-28">
